@@ -1,0 +1,20 @@
+--- 
+- hosts: all 
+  name: "Install the CA public key on the vagrant host."
+  become: yes
+  tasks:
+    - name: Install the certificate 
+      template:
+        src: ../secrets/ca_key.pub
+        dest: /etc/ssh/
+        owner: root 
+        group: root
+    - name: Update the SSH configuration file. 
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^TrustedUserCAKeys'
+        line: TrustedUserCAKeys /etc/ssh/ca_key.pub 
+    - name: Restart sshd 
+      service:
+        name: sshd
+        state: restarted
