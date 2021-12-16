@@ -1,9 +1,10 @@
-FROM python:3.10 as builder 
+FROM python:3.10-slim as builder 
 
-RUN adduser --system certmaker
-USER certmaker
+RUN apt update -y && apt install openssh-client -y
+
+ENV PYTHONUNBUFFERED True
 COPY . /app 
 WORKDIR /app 
-RUN pip3 install -r /app/requirements.txt 
+RUN pip3 install --no-cache-dir -r /app/requirements.txt 
 
-ENTRYPOINT ["/home/certmaker/.local/bin/gunicorn", "app"]
+CMD gunicorn --bind :$PORT app:app

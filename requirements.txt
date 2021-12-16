@@ -1,2 +1,5 @@
 flask 
 gunicorn 
+google-auth
+google-cloud-storage
+google-api-python-client
